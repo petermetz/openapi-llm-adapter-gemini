@@ -8,6 +8,9 @@ import { loadConfig, makeDocumentFromString } from "@redocly/openapi-core";
 
 import { mapSpecsToTools, OperationTypeNames } from "../src/index";
 
+/**
+ * 
+ */
 interface IFileData {
   readonly name: string;
   readonly path: string;

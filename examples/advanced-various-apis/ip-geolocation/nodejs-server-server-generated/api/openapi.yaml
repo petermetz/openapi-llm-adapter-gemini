@@ -1,0 +1,239 @@
+openapi: 3.0.1
+info:
+  title: IP geolocation API
+  description: "Abstract IP geolocation API allows developers to retrieve the region,\
+    \ country and city behind any IP worldwide. The API covers the geolocation of\
+    \ IPv4 and IPv6 addresses in 180+ countries worldwide. Extra information can be\
+    \ retrieved like the currency, flag or language associated to an IP."
+  version: 1.0.0
+  x-apisguru-categories:
+  - location
+  x-logo:
+    url: https://api.apis.guru/v2/cache/logo/https_global-uploads.webflow.com_5ebbd0a566a3996636e55959_5ec2ba29feeeb05d69160e7b_webclip.png
+  x-origin:
+  - format: openapi
+    url: https://documentation.abstractapi.com/ip-geolocation-openapi.json
+    version: "3.0"
+  x-providerName: abstractapi.com
+  x-serviceName: geolocation
+externalDocs:
+  description: API Documentation
+  url: https://www.abstractapi.com/ip-geolocation-api#docs
+servers:
+- url: https://ipgeolocation.abstractapi.com
+paths:
+  /v1/:
+    get:
+      description: Retrieve the location of an IP address
+      operationId: v1GET
+      parameters:
+      - name: api_key
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: ip_address
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 195.154.25.40
+      - name: fields
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "country,city,timezone"
+      responses:
+        "200":
+          description: Location of geolocated IP
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+              examples:
+                "0":
+                  value: "{\"ip_address\":\"195.154.25.40\",\"city\":\"Paris\",\"\
+                    city_geoname_id\":2988507,\"region\":\"Île-de-France\",\"region_iso_code\"\
+                    :\"IDF\",\"region_geoname_id\":3012874,\"postal_code\":\"75008\"\
+                    ,\"country\":\"France\",\"country_code\":\"FR\",\"country_geoname_id\"\
+                    :3017382,\"country_is_eu\":true,\"continent\":\"Europe\",\"continent_code\"\
+                    :\"EU\",\"continent_geoname_id\":6255148,\"longitude\":2.4075,\"\
+                    latitude\":48.8323,\"security\":{\"is_vpn\":false},\"timezone\"\
+                    :{\"name\":\"Europe/Paris\",\"abbreviation\":\"CEST\",\"gmt_offset\"\
+                    :2,\"current_time\":\"15:42:18\",\"is_dst\":true},\"flag\":{\"\
+                    emoji\":\"<ë<÷\",\"unicode\":\"U+1F1EB U+1F1F7\",\"png\":\"https://static.abstractapi.com/country-flags/FR_flag.png\"\
+                    ,\"svg\":\"https://static.abstractapi.com/country-flags/FR_flag.svg\"\
+                    },\"currency\":{\"currency_name\":\"Euros\",\"currency_code\"\
+                    :\"EUR\"},\"connection\":{\"autonomous_system_number\":12876,\"\
+                    autonomous_system_organization\":\"Online S.a.s.\",\"connection_type\"\
+                    :\"Corporate\",\"isp_name\":\"Online S.A.S.\",\"organization_name\"\
+                    :\"ONLINE\"}}"
+      servers:
+      - url: https://ipgeolocation.abstractapi.com
+      x-swagger-router-controller: Default
+    servers:
+    - url: https://ipgeolocation.abstractapi.com
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        city:
+          type: string
+        city_geoname_id:
+          type: integer
+        connection:
+          $ref: "#/components/schemas/inline_response_200_connection"
+        continent:
+          type: string
+        continent_code:
+          type: string
+        continent_geoname_id:
+          type: integer
+        country:
+          type: string
+        country_code:
+          type: string
+        country_geoname_id:
+          type: integer
+        country_is_eu:
+          type: boolean
+        currency:
+          $ref: "#/components/schemas/inline_response_200_currency"
+        flag:
+          $ref: "#/components/schemas/inline_response_200_flag"
+        ip_address:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        postal_code:
+          type: string
+        region:
+          type: string
+        region_geoname_id:
+          type: integer
+        region_iso_code:
+          type: string
+        security:
+          $ref: "#/components/schemas/inline_response_200_security"
+        timezone:
+          $ref: "#/components/schemas/inline_response_200_timezone"
+      example:
+        continent: continent
+        country: country
+        flag:
+          emoji: emoji
+          svg: svg
+          png: png
+          unicode: unicode
+        country_geoname_id: 5
+        city: city
+        city_geoname_id: 0
+        country_is_eu: true
+        timezone:
+          name: name
+          gmt_offset: 9
+          abbreviation: abbreviation
+          current_time: current_time
+          is_dst: true
+        latitude: 5.63737665663332876420099637471139430999755859375
+        continent_code: continent_code
+        ip_address: ip_address
+        region_geoname_id: 7
+        region_iso_code: region_iso_code
+        country_code: country_code
+        security:
+          is_vpn: true
+        connection:
+          isp_name: isp_name
+          connection_type: connection_type
+          organization_name: organization_name
+          autonomous_system_organization: autonomous_system_organization
+          autonomous_system_number: 6
+        currency:
+          currency_name: currency_name
+          currency_code: currency_code
+        continent_geoname_id: 1
+        postal_code: postal_code
+        region: region
+        longitude: 2.3021358869347654518833223846741020679473876953125
+    inline_response_200_connection:
+      type: object
+      properties:
+        autonomous_system_number:
+          type: integer
+        autonomous_system_organization:
+          type: string
+        connection_type:
+          type: string
+        isp_name:
+          type: string
+        organization_name:
+          type: string
+      example:
+        isp_name: isp_name
+        connection_type: connection_type
+        organization_name: organization_name
+        autonomous_system_organization: autonomous_system_organization
+        autonomous_system_number: 6
+    inline_response_200_currency:
+      type: object
+      properties:
+        currency_code:
+          type: string
+        currency_name:
+          type: string
+      example:
+        currency_name: currency_name
+        currency_code: currency_code
+    inline_response_200_flag:
+      type: object
+      properties:
+        emoji:
+          type: string
+        png:
+          type: string
+        svg:
+          type: string
+        unicode:
+          type: string
+      example:
+        emoji: emoji
+        svg: svg
+        png: png
+        unicode: unicode
+    inline_response_200_security:
+      type: object
+      properties:
+        is_vpn:
+          type: boolean
+      example:
+        is_vpn: true
+    inline_response_200_timezone:
+      type: object
+      properties:
+        abbreviation:
+          type: string
+        current_time:
+          type: string
+        gmt_offset:
+          type: integer
+        is_dst:
+          type: boolean
+        name:
+          type: string
+      example:
+        name: name
+        gmt_offset: 9
+        abbreviation: abbreviation
+        current_time: current_time
+        is_dst: true
