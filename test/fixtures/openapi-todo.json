@@ -1,0 +1,231 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Todo API",
+    "version": "1.0.0",
+    "description": "A simple Todo API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "paths": {
+    "/todos": {
+      "get": {
+        "summary": "Get all todos",
+        "operationId": "getTodosV1",
+        "tags": ["Todo"],
+        "responses": {
+          "200": {
+            "description": "A list of todos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Todo"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new todo",
+        "operationId": "createTodoV1",
+        "tags": ["Todo"],
+        "requestBody": {
+          "required": true,
+          "description": "The todo to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created todo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Todo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "options": {
+        "description": "A dummy operation to test if the mapper can handle the lack of operationId specified",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/todos/{id}": {
+      "description": "A dummy operation to test if the mapper can handle the lack of operationId specified for an endpoint with path parameters.",
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/{otherArg}/todos/{id}#": {
+      "description": "A dummy operation to test if the mapper can handle the lack of operationId specified for an endpoint with multiple path parameters.",
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/todo-wrapper-wrappers/{id}": {
+      "summary": "Performs operations on a wrapper of the TodoWrapper by the ID of the todo item itself.",
+      "get": {
+        "description": "Retrieves a TodoWrapperWrapper instance based on the todo item's ID",
+        "operationId": "getTodoWrapperWrapperV1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description": "The ID of the todo item to retrieve the TodoWrapperWrapper for.",
+                    "type": "number"
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new TodoWrapperWrapper entity in the datastore.",
+        "operationId": "createTodoWrapperWrapperV1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TodoWrapperWrapper"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TodoWrapperWrapper": {
+        "description": "Used for testing if the library can correctly handle schemas which are trees of different custom types.",
+        "type": "object",
+        "properties": {
+          "todoWrapper": {
+            "$ref": "#/components/schemas/TodoWrapper"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["todoWrapper"]
+      },
+      "TodoWrapper": {
+        "type": "object",
+        "properties": {
+          "todo": {
+            "$ref": "#/components/schemas/Todo"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": false
+          }
+        },
+        "required": ["todo"]
+      },
+      "Todo": {
+        "type": "object",
+        "required": ["id", "title"],
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the todo"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the todo"
+          }
+        }
+      },
+      "TodoInput": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the todo"
+          }
+        }
+      }
+    }
+  }
+}
