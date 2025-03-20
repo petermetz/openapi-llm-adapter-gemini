@@ -1,6 +1,6 @@
 {
     "name": "@petermetz-fyi/openapi-llm-adapter-gemini",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "A zero-dependency TypeScript library that automatically maps OpenAPI operations to Gemini Functions declarations.",
     "keywords": [
         "LLM",

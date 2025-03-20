@@ -68,7 +68,8 @@ const client = new TodoApi(
   new Configuration({ basePath: "http://localhost:3000" })
 );
 const runner = await newRunner<AxiosResponse<Todo>>({
-  call: firstPart.functionCall,
+  // verifying the response's validity is omitted for brevity
+  call: result.response.candidates[0].content.parts[0].functionCall,
   client,
 });
 
