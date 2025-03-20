@@ -108,12 +108,12 @@ function mergeOpenApiV3Parameters(params: OpenAPIV3.ParameterObject[]): {
   return Object.fromEntries(
     params.map((parameter) => {
       try {
-        const { schema, type, name, description, required } = parameter;
+        const { schema, name, description, required } = parameter;
         return [
           parameter.name,
           {
             name: name,
-            type: type || schema?.type,
+            type: schema?.type,
             description: description || name,
             required: required,
           },

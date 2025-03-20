@@ -14,7 +14,7 @@
     ],
     "scripts": {
         "clean": "rm -rf dist",
-        "build": "tsup src/index.ts",
+        "build": "tsup src/index.ts --dts --format esm,cjs,iife",
         "prepare": "npm run build",
         "test": "vitest ./test/*.test.ts",
         "example:basic": "run-p 'example:basic:*'",
