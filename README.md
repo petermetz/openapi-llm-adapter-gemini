@@ -9,39 +9,52 @@ For a complete, working example, take a look at `./examples/basic-todo-mvc/agent
 For the high level gist, here's how to perform the mapping for prompt enrichment and the task execution based on the LLM response:
 
 ```typescript
-//
-// 1. Perform the mapping from OpenAPI spec to Gemini Function Calls (tools)
-//
+
+import { Configuration, Todo, TodoApi } from "./insert-your-generated-openapi-client-here/index";
+
+import { newRunner } from "@petermetz-fyi/openapi-llm-adapter-gemini";
+import { mapSpecsToTools } from "@petermetz-fyi/openapi-llm-adapter-gemini";
 import { bundle, BundleResult } from "@redocly/openapi-core/lib/bundle";
 import { loadConfig, makeDocumentFromString } from "@redocly/openapi-core";
 
-// you can read in as many OpenAPI specification files as you want,
-// then store their contents in an array for further processing
-const specBuffers = [
-  Buffer.from(
-    `{"openapi":"3.0.3","info":{"title":"Todo API","version": "1.0.0","description":"A simple Todo API"}}`,
-    "utf-8"
-  ),
-];
+//
+// 1. PRE-PROCESSING
+// - Read in the OpenAPI specifications' contents from the file-system or from wherever you get yours.
+// - Any number of specifications are supported for mapping, not just a single one.
+// - bundle and dereference the specifications with redocly - necessary precondition for the mapper to work
+//
 
-const docs = specBuffers.map(
-  (data) => makeDocumentFromString(data.toString("utf-8"), "/"),
-  "/"
-);
+const openApiSpecsPaths = ["./src/openapi.json"];
+const specsContents: Array<string> = [];
+for (const specPath of openApiSpecsPaths) {
+  const exists = await fs.existsSync(specPath);
+  if (!exists) {
+    console.warn("Skipping %s because it does not exist.", specPath);
+    continue;
+  }
+  const specStr = await fs.readFileSync(specPath, "utf8");
+  specsContents.push(specStr);
+}
 
-// Bundle and dereference all the specs so that the mapper doesn't
-// trip up on reference objects
-const config = await loadConfig({});
-const dereference = true;
-const bundleResults: Array<Readonly<BundleResult>> = [];
-await Promise.all(
-  docs.map(async (doc) =>
-    bundle({ doc, config, dereference }).then((br) => bundleResults.push(br))
-  )
-);
+const bundleResultsPromises = specsContents.map(async (specStr) => {
+  const config = await loadConfig({});
+  const doc = makeDocumentFromString(specStr, "/");
+
+  return bundle({
+    doc,
+    config,
+    dereference: true,
+  });
+});
+const bundleResults = await Promise.all(bundleResultsPromises);
+
+// 
+// 2. Perform the mapping from OpenAPI spec to Gemini Function Calls (tools)
+//
+const { tools } = await mapSpecsToTools({ bundleResults });
 
 //
-// 2. Call the LLM with the enriched prompt containing the OpenAPI operations
+// 3. Call the LLM with the enriched prompt containing the OpenAPI operations
 //
 const result = await model.generateContent({
   contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -49,7 +62,7 @@ const result = await model.generateContent({
 });
 
 //
-// 3. Use the Runner Component to execute the OpenAPI operations
+// 4. Use the Runner component to execute the OpenAPI operations
 //
 const client = new TodoApi(
   new Configuration({ basePath: "http://localhost:3000" })
@@ -61,7 +74,6 @@ const runner = await newRunner<AxiosResponse<Todo>>({
 
 // This is where the actual execution happens
 await runner.run();
-
 ```
 
 ## Running the Examples - Basic Todo App
