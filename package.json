@@ -46,7 +46,7 @@
         "@angular/common": "20.3.27",
         "@angular/compiler": "20.3.27",
         "@angular/compiler-cli": "19.2.3",
-        "@angular/core": "20.3.27",
+        "@angular/core": "20.3.28",
         "@angular/forms": "19.2.3",
         "@angular/material": "19.2.4",
         "@angular/platform-browser": "19.2.3",
